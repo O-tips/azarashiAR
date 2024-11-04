@@ -31,7 +31,7 @@
     <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
     <a-entity mindar-image-target="targetIndex: 0">
-      <a-gltf-model id="model0" rotation="0 -90 0" position="0 0 0.1" scale="0.5 0.5 0.5" src="#model0" visible="true"></a-gltf-model>
+      <a-gltf-model id="model0" rotation="0 0 0" position="0 0 0.1" scale="0.5 0.5 0.5" src="#model0" visible="true"></a-gltf-model>
     </a-entity>
   </a-scene>
 
@@ -103,7 +103,7 @@
         });
         
         // モデルの動き
-        movePenguin();
+        move();
 
         // フォトフレーム表示
         const photoFrameOverlay = document.getElementById('photo-frame-overlay');
@@ -123,23 +123,32 @@
       }
     }
 
-    function movePenguin() {
-      const penguin = document.querySelector('#model0');
-      let position = 0;
-      const speed = 0.01;
-      let direction = 1;
+    function move() {
+        const penguin = document.querySelector('#model0');
+        let position = 0;
+        const speed = 0.01;
+        let direction = 1;
 
-      function animate() {
-        position += speed * direction;
-        if (position > 0.5 || position < -0.5) {
-          direction *= -1;
+        function animate() {
+            position += speed * direction;
+            if (position > 0.5 || position < -0.5) {
+            direction *= -1;
+            }
+            penguin.setAttribute('position', `0 ${position} 0.1`);
+            console.log(`Moving model0 to position: 0 ${position} 0.1`);
+            requestAnimationFrame(animate);
         }
-        penguin.setAttribute('position', `0 ${position} 0.1`);
-        requestAnimationFrame(animate);
-      }
 
-      animate();
-    }
+        // モデルのロードが完了した後にアニメーションを開始
+        if (penguin.getObject3D('mesh')) {
+            animate();
+        } else {
+            penguin.addEventListener('model-loaded', () => {
+            animate();
+            });
+        }
+        }
+
   </script>
 </body>
 </html>
