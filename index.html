@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.1.4/dist/mindar-image.prod.js"></script>
+  <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.1.4/dist/mindar-image-aframe.prod.js"></script>
+</head>
+<body>
+  <!-- ヘッダーの読み込み -->
+  <div id="header-container" style="position: relative; z-index: 1001;"></div>
+  <script>
+    // ヘッダーを読み込む
+    fetch('src/header.html')
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById('header-container').innerHTML = data;
+      });
+  </script>
+
+  <div id="photo-frame-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000;">
+    <img src="assets/images/photoFrame.png" style="width: 100%; height: calc(100% - 50px); object-fit: cover; margin-top: 50px;">
+  </div>
+
+  <a-scene mindar-image="imageTargetSrc: assets/target-images/cookie.mind;" color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
+    <a-assets>
+      <a-asset-item id="model0" src="assets/models/daikichi.glb"></a-asset-item>
+      <a-asset-item id="model1" src="assets/models/kichi.glb"></a-asset-item>
+      <a-asset-item id="model2" src="assets/models/chukichi.glb"></a-asset-item>
+      <audio id="soundEffect" src="assets/sounds/celebration.mp3"></audio>
+    </a-assets>
+
+    <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+
+    <a-entity mindar-image-target="targetIndex: 0">
+      <a-gltf-model id="model0" rotation="0 -90 0" position="0 0 0.1" scale="0.5 0.5 0.5" src="#model0" visible="true"></a-gltf-model>
+      <a-gltf-model id="model1" rotation="0 -90 0" position="0 0 0.1" scale="0.5 0.5 0.5" src="#model1" visible="true"></a-gltf-model>
+      <a-gltf-model id="model2" rotation="0 -90 0" position="0 0 0.1" scale="0.5 0.5 0.5" src="#model2" visible="true"></a-gltf-model>
+    </a-entity>
+  </a-scene>
+
+  <button id="muteButton" style="position: fixed; bottom: 20px; right: 20px; z-index: 1002;">音声ミュート解除</button>
+
+  <script>
+    let modelLoaded = false;
+    let soundPlayed = false;
+
+    const sceneEl = document.querySelector('a-scene');
+    sceneEl.addEventListener('arReady', (event) => {
+      console.log("MindAR is ready")
+    });
+    sceneEl.addEventListener('targetFound', (event) => {
+      console.log("Target found");
+      modelLoaded = true;
+      soundPlayed = false;
+      updateModel();
+    });
+    sceneEl.addEventListener('targetLost', (event) => {
+      console.log("Target lost");
+      soundPlayed = true;
+    });
+
+    const muteButton = document.getElementById('muteButton');
+    const soundEffect = document.querySelector('#soundEffect');
+    soundEffect.muted = true;
+    muteButton.addEventListener('click', function() {
+      if (soundEffect.muted) {
+        soundEffect.muted = false;
+        console.log("sound muted off");
+        muteButton.textContent = "音声ミュート中";
+      } else {
+        soundEffect.muted = true;
+        console.log("sound muted on");
+        muteButton.textContent = "音声ミュート解除";
+      }
+    });
+
+    function getRandomInt(min, max) {
+      min = Math.ceil(min);
+      max = Math.floor(max);
+      return Math.floor(Math.random() * (max - min) + min); // 上限は除き、下限は含む
+    }
+
+    function updateModel() {
+      if (modelLoaded) {
+        console.log("Updating model");
+        // 効果音
+        if (!soundPlayed && !soundEffect.muted) {
+          soundPlayed = true;
+          soundEffect.play();
+        }
+
+        // モデル表示
+        var randInt = getRandomInt(0, 3);
+        console.log("Selected model index: : " + randInt);
+        const models = [
+          document.querySelector('#model0'),
+          document.querySelector('#model1'),
+          document.querySelector('#model2')
+        ];
+        
+        models.forEach((model, idx) => {
+          const isVisible = idx === randInt;
+          console.log(`Model ${idx} visibility: ${isVisible}`);
+          model.setAttribute('visible', isVisible);
+          if (model.object3D) {
+            model.object3D.visible = isVisible;
+          }
+        });
+        
+        // モデルの動き
+        movePenguin();
+
+        // フォトフレーム表示
+        const photoFrameOverlay = document.getElementById('photo-frame-overlay');
+        photoFrameOverlay.style.display = 'block';
+
+        // モデル表示の確認
+        /*
+        setTimeout(() => {
+          models.forEach((model, idx) => {
+            console.log(`Model ${idx} actual visibility: ${model.getAttribute('visible')}`);
+            if (model.object3D) {
+              console.log(`Model ${idx} object3D visibility: ${model.object3D.visible}`);
+            }
+          });
+        }, 100);
+        */
+      }
+    }
+
+    function movePenguin() {
+      const penguin = document.querySelector('#model0');
+      let position = 0;
+      const speed = 0.01;
+      let direction = 1;
+
+      function animate() {
+        position += speed * direction;
+        if (position > 0.5 || position < -0.5) {
+          direction *= -1;
+        }
+        penguin.setAttribute('position', `0 ${position} 0.1`);
+        requestAnimationFrame(animate);
+      }
+
+      animate();
+    }
+  </script>
+</body>
+</html>
