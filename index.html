@@ -24,9 +24,7 @@
 
   <a-scene mindar-image="imageTargetSrc: assets/target-images/cookie.mind;" color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
     <a-assets>
-      <a-asset-item id="model0" src="assets/models/daikichi.glb"></a-asset-item>
-      <a-asset-item id="model1" src="assets/models/kichi.glb"></a-asset-item>
-      <a-asset-item id="model2" src="assets/models/chukichi.glb"></a-asset-item>
+        <a-asset-item id="model0" src="assets/models/azarashi3.glb"></a-asset-item>
       <audio id="soundEffect" src="assets/sounds/celebration.mp3"></audio>
     </a-assets>
 
@@ -34,8 +32,6 @@
 
     <a-entity mindar-image-target="targetIndex: 0">
       <a-gltf-model id="model0" rotation="0 -90 0" position="0 0 0.1" scale="0.5 0.5 0.5" src="#model0" visible="true"></a-gltf-model>
-      <a-gltf-model id="model1" rotation="0 -90 0" position="0 0 0.1" scale="0.5 0.5 0.5" src="#model1" visible="true"></a-gltf-model>
-      <a-gltf-model id="model2" rotation="0 -90 0" position="0 0 0.1" scale="0.5 0.5 0.5" src="#model2" visible="true"></a-gltf-model>
     </a-entity>
   </a-scene>
 
@@ -91,12 +87,10 @@
         }
 
         // モデル表示
-        var randInt = getRandomInt(0, 3);
+        var randInt = getRandomInt(0, 0);
         console.log("Selected model index: : " + randInt);
         const models = [
-          document.querySelector('#model0'),
-          document.querySelector('#model1'),
-          document.querySelector('#model2')
+          document.querySelector('#model0')
         ];
         
         models.forEach((model, idx) => {
