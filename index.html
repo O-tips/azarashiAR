@@ -24,14 +24,14 @@
 
   <a-scene mindar-image="imageTargetSrc: assets/target-images/cookie.mind;" color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
     <a-assets>
-        <a-asset-item id="model0" src="assets/models/azarashi3.glb"></a-asset-item>
+      <a-asset-item id="model0" src="assets/models/azarashi3.glb"></a-asset-item>
       <audio id="soundEffect" src="assets/sounds/celebration.mp3"></audio>
     </a-assets>
 
     <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
     <a-entity mindar-image-target="targetIndex: 0">
-      <a-gltf-model id="model0" rotation="0 0 0" position="0 0 0.1" scale="0.5 0.5 0.5" src="#model0" visible="true"></a-gltf-model>
+      <a-gltf-model id="model0" rotation="90 0 0" position="0 0 0.1" scale="0.5 0.5 0.5" src="#model0" visible="true"></a-gltf-model>
     </a-entity>
   </a-scene>
 
@@ -87,10 +87,10 @@
         }
 
         // モデル表示
-        var randInt = getRandomInt(0, 0);
+        var randInt = 0;
         console.log("Selected model index: : " + randInt);
         const models = [
-          document.querySelector('#model0')
+          document.querySelector('#model0'),
         ];
         
         models.forEach((model, idx) => {
@@ -124,31 +124,30 @@
     }
 
     function move() {
-        const penguin = document.querySelector('#model0');
-        let position = 0;
-        const speed = 0.01;
-        let direction = 1;
+    const penguin = document.querySelector('a-gltf-model'); ;
+    let position = 0;
+    const speed = 0.002;
+    let direction = 1;
 
-        function animate() {
-            position += speed * direction;
-            if (position > 0.5 || position < -0.5) {
-            direction *= -1;
-            }
-            penguin.setAttribute('position', `0 ${position} 0.1`);
-            console.log(`Moving model0 to position: 0 ${position} 0.1`);
-            requestAnimationFrame(animate);
-        }
+    function animate() {
+      position += speed * direction;
+      // console.log("position", position, direction);
 
-        // モデルのロードが完了した後にアニメーションを開始
-        if (penguin.getObject3D('mesh')) {
-            animate();
-        } else {
-            penguin.addEventListener('model-loaded', () => {
-            animate();
-            });
-        }
-        }
+      // 位置が範囲を超えた場合、方向を反転
+      if (position > 0.3 || position < -0.3) {
+        direction *= -1;
+      }
 
+      // モデルの位置を更新
+      if (penguin && penguin.object3D) {
+        penguin.object3D.position.z = position;
+      }
+      // console.log(penguin)
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+  }
   </script>
 </body>
 </html>
