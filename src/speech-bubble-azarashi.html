@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    /* 吹き出し全体のスタイル */
+    #speech-bubble {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 400px; /* 幅を固定 */
+      height: 50px; /* 高さを固定 */
+      padding: 20px; /* 内側の余白 */
+      background-color: black; /* 吹き出しの内側の背景色 */
+      border-radius: 10px;
+      border: 5px solid white; /* 外側の白い枠 */
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+      font-size: 24px; /* フォントサイズを増やす */
+      color: white;
+      text-align: center;
+      z-index: 1000;
+      font-family: 'DotGothic16', sans-serif; /* DotGothic16フォント */
+      overflow: hidden; /* テキストが枠を超えた場合に非表示にする */
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=DotGothic16&display=swap" rel="stylesheet"> <!-- DotGothic16フォント -->
+</head>
+<body>
+  <div id="speech-bubble">
+    <!-- 最初は空にしておく -->
+  </div>
+
+  <script>
+    // 文字を一文字ずつ表示する関数
+    function typeWriter(text, element, delay = 100) {
+      let i = 0;
+      function displayNextChar() {
+        if (i < text.length) {
+          element.textContent += text[i];
+          i++;
+          setTimeout(displayNextChar, delay);
+        }
+      }
+      displayNextChar();
+    }
+
+    // speech.txtからメッセージを取得して吹き出しに一文字ずつ表示
+    fetch('../assets/tmp/speech.txt')
+      .then(response => response.text())
+      .then(data => {
+        const speechBubble = document.getElementById('speech-bubble');
+        speechBubble.textContent = ''; // 吹き出しの内容をクリア
+        typeWriter(data, speechBubble); // 一文字ずつ表示
+      })
+      .catch(error => {
+        console.error('Error fetching speech.txt:', error);
+        document.getElementById('speech-bubble').textContent = 'メッセージの読み込みに失敗しました'; // エラーメッセージ
+      });
+  </script>
+</body>
+</html>
