@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    /* 吹き出し全体のスタイル */
+    #speech-bubble {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 400px; /* 幅を固定 */
+      height: 50px; /* 高さを固定 */
+      padding: 20px; /* 内側の余白 */
+      background-color: black; /* 吹き出しの内側の背景色 */
+      border-radius: 10px;
+      border: 5px solid white; /* 外側の白い枠 */
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+      font-size: 24px; /* フォントサイズを増やす */
+      color: white;
+      text-align: center;
+      z-index: 1000;
+      font-family: 'DotGothic16', sans-serif; /* DotGothic16フォント */
+      overflow: hidden; /* テキストが枠を超えた場合に非表示にする */
+    }
+    #start-btn {
+      position: fixed;
+      bottom: 150px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 10px 20px;
+      font-size: 18px;
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=DotGothic16&display=swap" rel="stylesheet"> <!-- DotGothic16フォント -->
+</head>
+<body>
+  <div id="speech-bubble">
+    <!-- 最初は空にしておく -->
+  </div>
+  <button id="start-btn">音声入力を開始</button>
+
+  <script>
+    // 文字を一文字ずつ表示する関数
+    function typeWriter(text, element, delay = 100) {
+      let i = 0;
+      function displayNextChar() {
+        if (i < text.length) {
+          element.textContent += text[i];
+          i++;
+          setTimeout(displayNextChar, delay);
+        }
+      }
+      displayNextChar();
+    }
+
+    // 音声認識の初期化
+    const startBtn = document.getElementById('start-btn');
+    const speechBubble = document.getElementById('speech-bubble');
+    let recognition;
+
+    if ('webkitSpeechRecognition' in window) {
+      recognition = new webkitSpeechRecognition(); // Chrome用
+      recognition.lang = 'ja-JP';
+      recognition.interimResults = false;
+      recognition.continuous = false;
+
+      recognition.onresult = (event) => {
+        const text = event.results[0][0].transcript; // 認識結果
+        speechBubble.textContent = ''; // 吹き出しの内容をクリア
+        typeWriter(text, speechBubble); // 一文字ずつ表示
+      };
+
+      recognition.onerror = (event) => {
+        console.error('音声認識エラー:', event);
+        speechBubble.textContent = '音声認識に失敗しました';
+      };
+
+      // ボタンをクリックしたときに音声認識を開始
+      startBtn.addEventListener('click', () => {
+        recognition.start();
+        speechBubble.textContent = '聞き取り中...'; // 聞き取り中の表示
+      });
+    } else {
+      // 音声認識がサポートされていない場合のメッセージ
+      speechBubble.textContent = '音声認識がサポートされていません';
+      startBtn.disabled = true;
+    }
+  </script>
+</body>
+</html>
