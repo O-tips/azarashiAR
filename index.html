@@ -1,7 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="src/styles.css" />
+  <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
   <script src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.1.4/dist/mindar-image.prod.js"></script>
   <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.1.4/dist/mindar-image-aframe.prod.js"></script>
@@ -16,145 +22,63 @@
       .then(data => {
         document.getElementById('header-container').innerHTML = data;
       });
+    // スクリーンショット用の画像を事前に読み込んでおく
+    const header = new Image();
+    header.src = "assets/images/header.png";
+    const photoFrame = new Image();
+    photoFrame.src = "assets/images/photoFrame.png";
   </script>
 
-  <div id="photo-frame-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000;">
-    <img src="assets/images/photoFrame.png" style="width: 100%; height: calc(100% - 50px); object-fit: cover; margin-top: 50px;">
+  <div class="contents">
+    <div id="photo-frame-overlay">
+      <img src="assets/images/photoFrame.png">
+    </div>
+
+    <a-scene mindar-image="imageTargetSrc: assets/target-images/cookie.mind;" color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
+      <a-assets>
+        <a-asset-item id="model0" src="assets/models/azarashi3.glb"></a-asset-item>
+        <audio id="soundEffect" src="assets/sounds/celebration.mp3"></audio>
+      </a-assets>
+
+      <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+
+      <a-entity mindar-image-target="targetIndex: 0">
+        <a-gltf-model id="model0" rotation="90 0 0" position="0 0 0.1" scale="0.5 0.5 0.5" src="#model0" visible="true"></a-gltf-model>
+      </a-entity>
+    </a-scene>
+
+    <!-- <iframe src="src/speech-bubble-hito.html" style="position: fixed; bottom: 0; left: 0; width: 100%; height: auto; border: none; z-index: 1000;"></iframe> -->
+    <div class="textbox-container">
+      <iframe src="src/speech-bubble-azarashi.html"></iframe> 
+    </div>
+    <!-- <iframe src="src/speech-bubble.html" style="position: fixed; bottom: 0; left: 0; width: 100%; height: auto; border: none; z-index: 1000;"></iframe>  -->
+
+    <div class="screenshot-display">
+      <img id="snap" />
+    </div>
   </div>
 
-  <a-scene mindar-image="imageTargetSrc: assets/target-images/cookie.mind;" color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
-    <a-assets>
-      <a-asset-item id="model0" src="assets/models/azarashi3.glb"></a-asset-item>
-      <audio id="soundEffect" src="assets/sounds/celebration.mp3"></audio>
-    </a-assets>
+  <div class="footer">
+    <div class="screenshot-ui">
+      <a href="#" id="delete-photo" title="Delete Photo" class="disabled"
+        ><i class="material-icons">delete</i></a
+      >
+      <a href="" id="take-photo" title="Take Photo"
+        ><i class="material-icons">photo_camera</i></a
+      >
+      <a
+        href="#"
+        id="download-photo"
+        download="selfie.png"
+        title="Save Photo"
+        class="disabled"
+        target="_blank"
+        ><i class="material-icons">file_download</i></a
+      >
+    </div>
+    <button id="muteButton">ミュート解除</button>
+  </div>
 
-    <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
-
-    <a-entity mindar-image-target="targetIndex: 0">
-      <a-gltf-model id="model0" rotation="90 0 0" position="0 0 0.1" scale="0.5 0.5 0.5" src="#model0" visible="true"></a-gltf-model>
-    </a-entity>
-  </a-scene>
-
-  <button id="muteButton" style="position: fixed; bottom: 20px; right: 20px; z-index: 1002;">音声ミュート解除</button>
-
-
-  <!-- <iframe src="src/speech-bubble-hito.html" style="position: fixed; bottom: 0; left: 0; width: 100%; height: auto; border: none; z-index: 1000;"></iframe> -->
-  <iframe src="src/speech-bubble-azarashi.html" style="position: fixed; bottom: 0; left: 0; width: 100%; height: auto; border: none; z-index: 1000;"></iframe> 
-  <!-- <iframe src="src/speech-bubble.html" style="position: fixed; bottom: 0; left: 0; width: 100%; height: auto; border: none; z-index: 1000;"></iframe>  -->
-
-
-  <script>
-    let modelLoaded = false;
-    let soundPlayed = false;
-
-    const sceneEl = document.querySelector('a-scene');
-    sceneEl.addEventListener('arReady', (event) => {
-      console.log("MindAR is ready")
-    });
-    sceneEl.addEventListener('targetFound', (event) => {
-      console.log("Target found");
-      modelLoaded = true;
-      soundPlayed = false;
-      updateModel();
-    });
-    sceneEl.addEventListener('targetLost', (event) => {
-      console.log("Target lost");
-      soundPlayed = true;
-    });
-
-    const muteButton = document.getElementById('muteButton');
-    const soundEffect = document.querySelector('#soundEffect');
-    soundEffect.muted = true;
-    muteButton.addEventListener('click', function() {
-      if (soundEffect.muted) {
-        soundEffect.muted = false;
-        console.log("sound muted off");
-        muteButton.textContent = "音声ミュート中";
-      } else {
-        soundEffect.muted = true;
-        console.log("sound muted on");
-        muteButton.textContent = "音声ミュート解除";
-      }
-    });
-
-    function getRandomInt(min, max) {
-      min = Math.ceil(min);
-      max = Math.floor(max);
-      return Math.floor(Math.random() * (max - min) + min); // 上限は除き、下限は含む
-    }
-
-    function updateModel() {
-      if (modelLoaded) {
-        console.log("Updating model");
-        // 効果音
-        if (!soundPlayed && !soundEffect.muted) {
-          soundPlayed = true;
-          soundEffect.play();
-        }
-
-        // モデル表示
-        var randInt = 0;
-        console.log("Selected model index: : " + randInt);
-        const models = [
-          document.querySelector('#model0'),
-        ];
-        
-        models.forEach((model, idx) => {
-          const isVisible = idx === randInt;
-          console.log(`Model ${idx} visibility: ${isVisible}`);
-          model.setAttribute('visible', isVisible);
-          if (model.object3D) {
-            model.object3D.visible = isVisible;
-          }
-        });
-        
-        // モデルの動き
-        move();
-
-        // フォトフレーム表示
-        const photoFrameOverlay = document.getElementById('photo-frame-overlay');
-        photoFrameOverlay.style.display = 'block';
-
-        // モデル表示の確認
-        /*
-        setTimeout(() => {
-          models.forEach((model, idx) => {
-            console.log(`Model ${idx} actual visibility: ${model.getAttribute('visible')}`);
-            if (model.object3D) {
-              console.log(`Model ${idx} object3D visibility: ${model.object3D.visible}`);
-            }
-          });
-        }, 100);
-        */
-      }
-    }
-
-    function move() {
-    const penguin = document.querySelector('a-gltf-model'); ;
-    let position = 0;
-    const speed = 0.002;
-    let direction = 1;
-
-    function animate() {
-      position += speed * direction;
-      // console.log("position", position, direction);
-
-      // 位置が範囲を超えた場合、方向を反転
-      if (position > 0.3 || position < -0.3) {
-        direction *= -1;
-      }
-
-      // モデルの位置を更新
-      if (penguin && penguin.object3D) {
-        penguin.object3D.position.z = position;
-      }
-      // console.log(penguin)
-      requestAnimationFrame(animate);
-    }
-
-    animate();
-  }
-  </script>
+  <script src="src/script.js"></script>
 </body>
 </html>
-

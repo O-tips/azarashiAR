@@ -1,0 +1,143 @@
+.contents {
+    z-index: 1000;
+    bottom: 60px;
+    width: 100%;
+    height: 100%;
+}
+
+.contents #photo-frame-overlay {
+    display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+}
+
+.contents #photo-frame-overlay img {
+    width: 100%;
+    height: calc(100% - 50px);
+    object-fit: cover;
+    margin-top: 50px;
+}
+
+.textbox-container {
+    position: fixed;
+    width: 100%;
+    height: auto;
+    border: none;
+    bottom: 0px;
+}
+
+.textbox-container iframe {
+    width: 100%;
+    height: 200px;
+    border: none;
+    position: fixed;
+    bottom: 80px;
+    left: 0;
+    z-index: 1002;
+}
+
+.footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 80px;
+    z-index: 1001;
+}
+
+.screenshot-ui {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    margin: 0;
+    padding: 10px 15px 10px;
+    text-align: center;
+    box-sizing: border-box;
+}
+.screenshot-ui a {
+    display: inline-block;
+    width: 60px;
+    height: 60px;
+    background-color: #ffffff;
+    line-height: 100%;
+    color: #303030;
+    margin: 10px 3px;
+    border-radius: 50%;
+    position: relative;
+}
+.screenshot-ui a i {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.screenshot-ui a:active {
+    color: #ff0000;
+}
+.screenshot-ui a.disabled {
+    pointer-events: none;
+    color: #cccccc;
+}
+
+.screenshot-display {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    pointer-events: none;
+}
+
+#snap {
+    max-width: 90%;
+    max-height: 90%;
+    object-fit: contain;
+    visibility: hidden;
+    pointer-events: auto;
+}
+
+#snap.visible {
+    visibility: visible;
+}
+
+#muteButton {
+  position: fixed;
+  justify-content: center;
+  right: 20px;
+  bottom: 30px;
+  background-color: #b49f6a;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  padding: 10px 20px;
+  font-size: 12px;
+  font-family: 'Kiwi Maru', serif;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+#muteButton:hover {
+  background-color: #b49f6a;
+  transform: scale(1.05);
+}
+
+#muteButton:active {
+  transform: scale(0.95);
+}
+
+.icon {
+  margin-right: 8px;
+}
+  
+/* アニメーション */
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.fortune-dialog[open] {
+    animation: fadeIn 0.3s ease-out;
+}
