@@ -101,6 +101,7 @@ function move() {
       // モデルの位置を更新
       if (penguin && penguin.object3D) {
         penguin.object3D.position.z = position;
+        penguin.object3D.position.y = position;
       }
       // console.log(penguin)
       requestAnimationFrame(animate);
