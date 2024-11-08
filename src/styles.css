@@ -107,13 +107,15 @@
   position: fixed;
   justify-content: center;
   right: 20px;
-  bottom: 30px;
+  /* bottom: 30px; */
+  bottom: 10px;
   background-color: #b49f6a;
   color: white;
   border: none;
   border-radius: 25px;
   padding: 10px 20px;
-  font-size: 12px;
+  /* font-size: 12px; */
+  font-size: 6px;
   font-family: 'Kiwi Maru', serif;
   cursor: pointer;
   transition: background-color 0.3s, transform 0.3s;
