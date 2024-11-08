@@ -171,16 +171,7 @@ function takeSnapshot(video) {
       resizedContext.drawImage(aScene, 0, 0, width, height);
     } else {
       // 縦長（スマホ）
-      var scale = height / width;
-      var scaledWidth = height * scale;
-      var marginLeft = (width - scaledWidth) / 2;
-      resizedContext.drawImage(
-        aScene,
-        marginLeft,
-        0,
-        scaledWidth,
-        height
-      );
+      resizedContext.drawImage(aScene, 0, 0, width, (width/photoFrame.width)*aScene.height);
     }
     // photoFrame.pngの読み込みと描画
     resizedContext.drawImage(photoFrame, 0, 0, width, (width/photoFrame.width)*photoFrame.height);
