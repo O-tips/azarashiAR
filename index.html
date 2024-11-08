@@ -29,7 +29,7 @@
     </div>
 
     <a-scene mindar-image="imageTargetSrc: assets/target-images/yuki.mind;" color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
-      <a-assets>
+      <a-assets>s
         <a-asset-item id="model0" src="assets/models/azarashi3.glb"></a-asset-item>
         <audio id="soundEffect" src="assets/sounds/celebration.mp3"></audio>
       </a-assets>
@@ -68,8 +68,9 @@
         target="_blank"
         ><i class="material-icons">file_download</i></a
       >
+      <button id="muteButton">ミュート解除</button>
     </div>
-    <button id="muteButton">ミュート解除</button>
+    <!-- <button id="muteButton">ミュート解除</button> -->
   </div>
 
   <script src="src/script.js"></script>
