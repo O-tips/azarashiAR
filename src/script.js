@@ -86,7 +86,7 @@ function updateModel() {
 function move() {
     const penguin = document.querySelector('a-gltf-model'); ;
     let position = 0;
-    const speed = 0.002;
+    const speed = 0.001;
     let direction = 1;
 
     function animate() {
@@ -94,7 +94,7 @@ function move() {
       // console.log("position", position, direction);
 
       // 位置が範囲を超えた場合、方向を反転
-      if (position > 0.3 || position < -0.3) {
+      if (position > 0.2 || position < -0.2) {
         direction *= -1;
       }
 
