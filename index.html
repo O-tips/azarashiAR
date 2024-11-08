@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
   <link rel="stylesheet" href="src/styles.css" />
   <link
       href="https://fonts.googleapis.com/icon?family=Material+Icons"
@@ -13,28 +13,22 @@
   <script src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.1.4/dist/mindar-image-aframe.prod.js"></script>
 </head>
 <body>
-  <!-- ヘッダーの読み込み -->
-  <div id="header-container" style="position: relative; z-index: 1001;"></div>
+  <!-- ヘッダー -->
+  <div id="header-container" class="header-container"></div>
   <script>
-    // ヘッダーを読み込む
     fetch('src/header.html')
       .then(response => response.text())
       .then(data => {
         document.getElementById('header-container').innerHTML = data;
       });
-    // スクリーンショット用の画像を事前に読み込んでおく
-    const header = new Image();
-    header.src = "assets/images/header.png";
-    const photoFrame = new Image();
-    photoFrame.src = "assets/images/photoFrame.png";
   </script>
 
   <div class="contents">
-    <div id="photo-frame-overlay">
-      <img src="assets/images/photoFrame.png">
+    <div id="photo-frame-overlay" class="photo-frame-overlay">
+      <img src="assets/images/photoFrame.png" class="photo-frame-image">
     </div>
 
-    <a-scene mindar-image="imageTargetSrc: assets/target-images/cookie.mind;" color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
+    <a-scene mindar-image="imageTargetSrc: assets/target-images/yuki.mind;" color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
       <a-assets>
         <a-asset-item id="model0" src="assets/models/azarashi3.glb"></a-asset-item>
         <audio id="soundEffect" src="assets/sounds/celebration.mp3"></audio>
@@ -47,17 +41,16 @@
       </a-entity>
     </a-scene>
 
-    <!-- <iframe src="src/speech-bubble-hito.html" style="position: fixed; bottom: 0; left: 0; width: 100%; height: auto; border: none; z-index: 1000;"></iframe> -->
     <div class="textbox-container">
-      <iframe src="src/speech-bubble-azarashi.html"></iframe> 
+      <iframe src="src/speech-bubble-azarashi.html" class="speech-bubble"></iframe> 
     </div>
-    <!-- <iframe src="src/speech-bubble.html" style="position: fixed; bottom: 0; left: 0; width: 100%; height: auto; border: none; z-index: 1000;"></iframe>  -->
 
     <div class="screenshot-display">
       <img id="snap" />
     </div>
   </div>
 
+  <!-- フッター -->
   <div class="footer">
     <div class="screenshot-ui">
       <a href="#" id="delete-photo" title="Delete Photo" class="disabled"
